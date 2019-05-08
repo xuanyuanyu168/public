@@ -4,7 +4,7 @@
 # 
 # 20180503 - First version 
 # 20180603 - Second version 
-# 20180703 - Third version 
+# 20180803 - Third version 
 #Usage ./main.sh hostname-vip
 #For Example: ./main.sh h21-p-ma-hdb-vip
 
