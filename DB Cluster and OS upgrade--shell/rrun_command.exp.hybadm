@@ -1,0 +1,56 @@
+#!/usr/bin/expect
+#set file "oracle_list.opt"
+set password [ lindex $argv 0 ]
+set ip [ lindex $argv 1 ]
+set run_file [ lindex $argv 2 ]
+set owner [ lindex $argv 3 ]
+set timeout -1
+#set file [ lindex $argv 1 ]
+#set ip_a [open $file r]
+#while { [gets $ip_a ip] != -1 } {
+spawn ssh $ip
+expect {
+ "(yes/no)?"
+  {
+  send "yes\r"
+  expect "*assword:" { send "$password\r"}
+ }
+ "*assword:"
+{
+ send "$password\r"
+}
+}
+
+expect "]*"
+send "sudo su - \r"
+
+expect {
+ "*password for*"
+  {
+  send "$password\r"
+ }
+ "]*"
+{
+ send "chmod 777 /tmp/$run_file\r"
+}
+}
+
+expect "]*"
+send "mv /tmp/$run_file /opt/$run_file\r"
+expect "]*"
+send "su - $owner\r"
+expect "HDB00>*"
+send "cd /opt\r"
+expect "/opt>*"
+send "/opt/$run_file\r"
+expect "/opt>*"
+send "exit\r"
+expect "]*"
+send "rm -f /tmp/$run_file\r"
+expect "]*"
+send "exit\r"
+expect "]*"
+send "exit\r"
+#}
+
+expect eof
